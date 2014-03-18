@@ -42,10 +42,10 @@ def normalize(m):
     row_sums = m.sum(axis=1)
     return m / row_sums[:, np.newaxis]
 
+
 def main():
     # Apparently this is a very bad idea.
     sys.setrecursionlimit(1500)
-
 
     txt, chars = readandclean("textdata.txt")
 
@@ -64,42 +64,21 @@ def main():
     seqlen = 1000
     Olist = Olist[:seqlen]
 
-    np.random.seed(10001)
-
     # this is a vector
-    #pi = np.ones(N) / N
     pi = np.random.rand(N)
     pi = pi / sum(pi)
 
     # these are matrices
-    #A = np.ones((N, N))
     A = np.random.rand(N, N)
-    #B = np.ones((N, M))
     B = np.random.rand(N, M)
-    #A0 = np.random.rand(N, N)
-    #B0 = np.random.rand(N, M)
 
     A = normalize(A)
     B = normalize(B)
 
-    mine = True
-
-    if mine:
-        newPi, newA, newB = myhmm.learn_HMM(pi, A, B, Olist, threshold=0.0001)
-        plotconf(newA, title="A Matrix")
-        plt = plotconf(newB, xlab=chars, title="B Matrix")
-        plt.show()
-    else:
-        hmmguess = coloHMM.HMM()
-        hmmguess.pi = pi
-        hmmguess.A = A
-        hmmguess.B = B
-
-        hmmguess.train(np.array(Olist), 0.0001, graphics=False)
-
-        plt = plotconf(hmmguess.A, title="A Matrix")
-        plt = plotconf(hmmguess.B, xlab=chars, title="B Matrix")
-        plt.show()
+    newPi, newA, newB = myhmm.learn_HMM(pi, A, B, Olist, threshold=0.0001)
+    plotconf(newA, title="A Matrix")
+    plt = plotconf(newB, xlab=chars, title="B Matrix")
+    plt.show()
 
 
 if __name__ == "__main__":
