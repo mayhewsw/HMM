@@ -1,8 +1,6 @@
 import numpy as np
-
 import logging
 import math
-
 
 FORMAT = "[%(asctime)s] : %(filename)s.%(funcName)s():%(lineno)d - %(message)s"
 DATEFMT = '%H:%M:%S, %m/%d/%Y'
@@ -11,7 +9,7 @@ logger = logging.getLogger(__name__)
 
 np.set_printoptions(linewidth=200, precision=3, suppress=True)
 
-debug=False
+debug = False
 
 
 def learn_HMM(pi, A, B, O, iterlimit=10000, threshold=0.0001):
@@ -41,7 +39,7 @@ def learn_HMM(pi, A, B, O, iterlimit=10000, threshold=0.0001):
         alpha = np.zeros((T, N))
         beta = np.zeros((T, N))
         gamma = np.zeros((T, N))
-        xi = np.zeros((N, N, T-1))
+        xi = np.zeros((N, N, T - 1))
         c = np.zeros(T)
 
         iters += 1
@@ -61,12 +59,10 @@ def learn_HMM(pi, A, B, O, iterlimit=10000, threshold=0.0001):
             c[t] = 1. / np.sum(alpha[t, :])
             alpha[t, :] *= c[t]
 
-
-
         # Compute beta
         for j in range(N):
             beta[T - 1, j] = 1.
-        beta[T-1, :] *= c[T-1]
+        beta[T - 1, :] *= c[T - 1]
 
         for t in range(T - 2, -1, -1):
             for i in range(N):
@@ -85,16 +81,16 @@ def learn_HMM(pi, A, B, O, iterlimit=10000, threshold=0.0001):
 
         # compute gammas
         for t in range(T):
-            rowsum = np.dot(alpha[t, :], beta[t, :])  # does this sum? I hope so.
+            rowsum = np.dot(alpha[t, :], beta[t, :])
             for i in range(N):
                 gamma[t, i] = alpha[t, i] * beta[t, i] / rowsum
 
         # compute xi
-        for t in range(T-1):
+        for t in range(T - 1):
             xisum = 0
             for i in range(N):
                 for j in range(N):
-                    xi[i, j, t] = alpha[t, i] * A[i, j] * B[j, O[t+1]] * beta[t+1, j]
+                    xi[i, j, t] = alpha[t, i] * A[i, j] * B[j, O[t + 1]] * beta[t + 1, j]
                     xisum += xi[i, j, t]
 
             xi[:, :, t] /= xisum
@@ -127,17 +123,16 @@ def learn_HMM(pi, A, B, O, iterlimit=10000, threshold=0.0001):
 
         logP = -1 * np.sum(map(lambda ct: math.log(ct), c))
         print "logP: ", logP
-        #P = sum(alpha[T - 1, :])
 
         diff = logP - logPold
         print "change in prob (should be positive): ", diff, "\n"
         if diff < 0:
-            "diff is not positive!"
+            "ERROR: diff is not positive!"
             break
 
         if diff < threshold:
             print "We have reached our goal. diff=", diff
-            break
+            converged = True
 
         logPold = logP
 
