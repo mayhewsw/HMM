@@ -13,9 +13,18 @@ np.set_printoptions(linewidth=200, precision=3, suppress=True)
 
 debug=False
 
+
 def learn_HMM(pi, A, B, O, iterlimit=10000, threshold=0.0001):
     ''' This estimates the parameters lambda of an HMM using only an emitted
-    symbol sequence O (unsupervised) and an inition guess lambda_0.'''
+    symbol sequence O (unsupervised) and an initial guess lambda_0.
+
+    Parameters:
+      pi - a 1XN dimensional numpy array, initialized randomly, sums to 1
+      A - an NxN dimensional numpy array, initialized randomly, each row sums to 1
+      B - an NXM dimensional numpy array, initialized randomly, each row sums to 1
+      O - a 1XT dimensional numpy array. This must consist of integers chosen from a discrete set. Each integer is an observation.
+
+    '''
 
     converged = False
 
