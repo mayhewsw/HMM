@@ -13,16 +13,22 @@ debug = False
 
 
 def learn_HMM(pi, A, B, O, iterlimit=10000, threshold=0.0001):
-    ''' This estimates the parameters lambda of an HMM using only an emitted
+    """
+    This estimates the parameters lambda of an HMM using only an emitted
     symbol sequence O (unsupervised) and an initial guess lambda_0.
 
     Parameters:
-      pi - a 1XN dimensional numpy array, initialized randomly, sums to 1
-      A - an NxN dimensional numpy array, initialized randomly, each row sums to 1
-      B - an NXM dimensional numpy array, initialized randomly, each row sums to 1
-      O - a 1XT dimensional numpy array. This must consist of integers chosen from a discrete set. Each integer is an observation.
-
-    '''
+      pi - a 1XN dimensional numpy array, the initial probabilities array,
+           initialized randomly, sums to 1
+      A - an NxN dimensional numpy array, the transition matrix,
+          initialized randomly, each row sums to 1
+      B - an NXM dimensional numpy array, the state-observation matrix,
+          initialized randomly, each row sums to 1
+      O - a 1XT dimensional numpy array, the observations,
+          This must consist of integers chosen from a discrete set. In
+          particular, if there are 5 possible observations, then the
+          set must be {0, 1, 2, 3, 4}.
+    """
 
     converged = False
 
